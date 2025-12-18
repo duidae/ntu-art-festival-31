@@ -1,0 +1,8 @@
+{
+  "name": "圳下之聲 Voices from the Underground",
+  "description": "An interactive Brutalist web art experience exploring the hidden ecology of the Liugongjun canal. Part of the 31st Art Festival.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
