@@ -11,13 +11,16 @@ import {
   CheckCircle2,
   Waves,
   Map as MapIcon,
-  Mic,
-  Share2,
-  X,
-  Play,
-  Fish,
-  Camera
+  Mic, 
+  Share2, 
+  X, 
+  Play, 
+  Fish, 
+  Camera, 
+  HelpCircle 
 } from 'lucide-react';
+import L from 'leaflet';
+import { CATFISH_BASE64 } from './constants'
 
 /**
  * 圳下之聲：瑠公圳的隱地下生態 (Voices from the Underground)
@@ -27,13 +30,23 @@ import {
 
 // --- Style Tokens ---
 const STYLES = {
-  bg: "bg-[#e8e8e6]", // Light concrete gray
+  bg: "bg-[#e8e8e6]", 
   textMain: "text-zinc-900",
   textSub: "text-zinc-500",
-  accent: "bg-[#4dff88]", // Neon Green from poster
+  accent: "bg-[#4dff88]", 
   accentText: "text-[#00a63e]",
   black: "bg-zinc-900",
   border: "border-zinc-900",
+};
+
+// --- Helper for HTML Strings (since Leaflet popups use innerHTML) ---
+const getIconSvg = (type: 'unknown' | 'check' | SCENES) => {
+  let svgs = {
+    unknown: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+    check: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+  };
+  svgs[SCENES.MISSION_1] = `<img src="${CATFISH_BASE64}" style="width: 100%; height: auto; display: block;" alt="Catfish"/>`;
+  return svgs[type];
 };
 
 // --- Components ---
@@ -58,13 +71,9 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'primary',
   const baseStyle = "px-6 py-3 font-bold transition-all active:translate-y-1 relative group overflow-hidden border-2 border-zinc-900 select-none";
   
   const variants = {
-    // Green solid, black text, sharp borders
     primary: "bg-[#4dff88] text-zinc-900 hover:bg-[#3ce677]", 
-    // Black solid, white text
     secondary: "bg-zinc-900 text-[#e8e8e6] hover:bg-zinc-800",
-    // Transparent, black border
     ghost: "bg-transparent text-zinc-900 hover:bg-white/50",
-    // Special action button
     action: "bg-zinc-900 text-[#4dff88] hover:text-white"
   };
 
@@ -74,7 +83,6 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'primary',
       disabled={disabled}
       className={`${baseStyle} ${variants[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
     >
-      {/* Decorative dot in corner */}
       <span className="absolute top-1 right-1 w-1 h-1 bg-current opacity-50"></span>
       <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
     </button>
@@ -90,7 +98,6 @@ interface DialogBoxProps {
 
 const DialogBox: React.FC<DialogBoxProps> = ({ speaker, text, onNext, isEnd }) => (
   <div className="absolute bottom-6 left-4 right-4 bg-white border-2 border-zinc-900 p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] z-50 animate-slide-up">
-    {/* Decorative jagged line on top */}
     <div className="absolute -top-3 left-4 flex gap-1">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="w-2 h-2 bg-[#4dff88] border border-zinc-900 rotate-45"></div>
@@ -140,7 +147,7 @@ export default function App() {
       <div className="w-full max-w-md h-[100dvh] md:h-[800px] bg-[#e8e8e6] md:border-4 border-zinc-900 shadow-2xl overflow-hidden relative flex flex-col">
         <NoiseOverlay />
         
-        {/* Status Bar - Minimalist / Brutalist */}
+        {/* Status Bar */}
         <div className="h-10 border-b-2 border-zinc-900 flex justify-between items-center px-4 bg-white z-50 relative shrink-0">
           <span className="font-mono font-bold text-xs tracking-widest">31TH_FESTIVAL</span>
           <div className="flex items-center gap-2">
@@ -161,8 +168,8 @@ export default function App() {
 
         {/* Navigation - Floating Brutalist Bar */}
         {scene === SCENES.MAP && (
-          <div className="absolute bottom-8 left-4 right-4 h-16 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center justify-around px-2 z-40">
-            <button className="flex flex-col items-center gap-1 text-zinc-900 group">
+          <div className="absolute bottom-8 left-4 right-4 h-16 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center justify-around px-2 z-[1000]">
+            <button className="flex flex-col items-center gap-1 text-zinc-900 group" onClick={() => setScene(SCENES.MAP)}>
               <div className="bg-[#4dff88] p-1 border border-zinc-900 transition-transform group-hover:-translate-y-1">
                 <MapPin size={18} />
               </div>
@@ -212,10 +219,8 @@ function IntroScene({ setScene }: SceneProps) {
 
   return (
     <div className="h-full flex flex-col items-center justify-center bg-[#e8e8e6] relative p-8">
-      {/* Background Graphic Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[url('https://www.transparenttextures.com/patterns/black-felt.png')] opacity-10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse-slow"></div>
       
-      {/* Zigzag Line Decoration */}
       <svg className="absolute w-full h-full pointer-events-none opacity-60 z-0" style={{top: 0, left: 0}}>
          <path d="M -50 400 L 100 550 L 250 350 L 450 600" stroke="#4dff88" strokeWidth="12" fill="none" strokeLinecap="square" />
          <circle cx="100" cy="550" r="6" fill="black" />
@@ -258,72 +263,121 @@ function IntroScene({ setScene }: SceneProps) {
 }
 
 function MapScene({ setScene, progress }: MapSceneProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
   const allDone = progress.m1 && progress.m2 && progress.m3;
 
+  useEffect(() => {
+    if (mapContainerRef.current && !mapInstanceRef.current) {
+      // Coordinates around National Taiwan University area in Taipei
+      const center: L.LatLngExpression = [25.018429, 121.538275];
+      
+      const map = L.map(mapContainerRef.current, {
+        zoomControl: true,
+        attributionControl: true,
+        scrollWheelZoom: true,
+      }).setView(center, 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      mapInstanceRef.current = map;
+
+      // Define Custom Markers
+      const createMarkerIcon = (isDone: boolean, color: string = '#4dff88') => L.divIcon({
+        className: 'custom-brutalist-icon',
+        html: `
+          <div style="
+            width: 32px; 
+            height: 32px; 
+            background: ${isDone ? '#d4d4d8' : color}; 
+            border: 2px solid #18181b; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 3px 3px 0px 0px #18181b;
+          ">
+            <div style="width: 8px; height: 8px; background: #18181b; rotate: 45deg;"></div>
+          </div>
+        `,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      });
+
+      const userIcon = L.divIcon({
+        className: 'user-icon',
+        html: `<div class="w-4 h-4 bg-zinc-900 rotate-45 border-2 border-[#4dff88] animate-spin-slow"></div>`,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+      });
+
+      // User Position
+      L.marker(center, { icon: userIcon }).addTo(map);
+
+      // Mission Markers
+      const missions = [
+        { id: SCENES.MISSION_1, pos: [25.017432, 121.539507] as L.LatLngExpression, title: '幽靈土虱', done: progress.m1 },
+        { id: SCENES.MISSION_2, pos: [25.015523, 121.538850] as L.LatLngExpression, title: '幽靈外來種', done: progress.m2 },
+        { id: SCENES.MISSION_3, pos: [25.020811, 121.534216] as L.LatLngExpression, title: '幽靈牛屎鯽', done: progress.m3 },
+      ];
+
+      missions.forEach((m) => {
+        const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done) }).addTo(map);
+        const popupContent = document.createElement('div');
+        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+        
+        // FIX: Replaced broken img tag and Shield icon with custom SVG strings
+        const iconHtml = m.done 
+          ? `<div class="w-44 h-44 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg(m.id)}
+             </div>`
+          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg('unknown')}
+             </div>`;
+
+        popupContent.innerHTML = `
+          ${iconHtml}
+          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
+            ${m.done ? '檔案已歸檔' : '進入節點'}
+          </button>
+        `;
+        
+        const btn = popupContent.querySelector('button');
+        if (btn) {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            setScene(m.id);
+          };
+        }
+
+        marker.bindPopup(popupContent, { minWidth: 120 });
+      });
+    }
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [setScene, progress]);
+
   return (
-    <div className="h-full bg-[#e8e8e6] relative overflow-hidden">
-      {/* Grid Background */}
-      <div className="absolute inset-0 z-0" 
-           style={{ 
-             backgroundImage: 'linear-gradient(to right, #ccc 1px, transparent 1px), linear-gradient(to bottom, #ccc 1px, transparent 1px)',
-             backgroundSize: '40px 40px'
-           }}>
-      </div>
+    <div className="h-full bg-[#e8e8e6] relative overflow-hidden flex flex-col">
+      {/* Map Container */}
+      <div ref={mapContainerRef} className="flex-1 z-0 grayscale contrast-125" />
       
-      {/* Abstract Map Lines - Zigzag style */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-80">
-        <path d="M 50 200 L 150 450 L 300 300 L 200 600" stroke="#d4d4d8" strokeWidth="4" fill="none" strokeDasharray="8 4" />
-        <path d="M 300 100 L 150 450 L 50 600" stroke="#d4d4d8" strokeWidth="4" fill="none" />
-      </svg>
-
-      {/* User Location */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center">
-        <div className="w-4 h-4 bg-zinc-900 rotate-45 border-2 border-[#4dff88]"></div>
-        <div className="mt-2 bg-white border border-zinc-900 px-2 py-0.5 text-[10px] font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">你</div>
-      </div>
-
-      {/* Nodes - Black dots connected by green lines concept */}
-      
-      {/* M1 */}
-      <div 
-        className={`absolute top-[30%] left-[20%] flex flex-col items-center group transition-all duration-300 ${progress.m1 ? 'opacity-40 grayscale' : 'cursor-pointer hover:scale-110'}`}
-        onClick={() => !progress.m1 && setScene(SCENES.MISSION_1)}
-      >
-        <div className={`w-12 h-12 flex items-center justify-center border-2 border-zinc-900 relative z-10 transition-colors ${progress.m1 ? 'bg-zinc-300' : 'bg-white group-hover:bg-[#4dff88]'}`}>
-          {progress.m1 ? <CheckCircle2 size={20}/> : <Droplets size={24} className="text-zinc-900" />}
-        </div>
-        {/* Line connection point */}
-        <div className="w-3 h-3 bg-zinc-900 rounded-full absolute -bottom-1.5 -right-1.5 z-20"></div>
-        <span className="mt-2 text-xs font-bold bg-zinc-900 text-white px-2 py-1 rotate-2">遺失水脈</span>
-      </div>
-
-      {/* M2 */}
-      <div 
-        className={`absolute top-[60%] right-[20%] flex flex-col items-center group transition-all duration-300 ${progress.m2 ? 'opacity-40 grayscale' : 'cursor-pointer hover:scale-110'}`}
-        onClick={() => !progress.m2 && setScene(SCENES.MISSION_2)}
-      >
-        <div className={`w-12 h-12 flex items-center justify-center border-2 border-zinc-900 relative z-10 transition-colors ${progress.m2 ? 'bg-zinc-300' : 'bg-white group-hover:bg-[#4dff88]'}`}>
-          {progress.m2 ? <CheckCircle2 size={20}/> : <Sparkles size={24} className="text-zinc-900" />}
-        </div>
-        <div className="w-3 h-3 bg-zinc-900 rounded-full absolute -top-1.5 -left-1.5 z-20"></div>
-        <span className="mt-2 text-xs font-bold bg-zinc-900 text-white px-2 py-1 -rotate-2">微光生態</span>
-      </div>
-
-      {/* M3: Ghost Fish (Renamed) */}
-      <div 
-        className={`absolute bottom-[20%] left-[30%] flex flex-col items-center group transition-all duration-300 ${progress.m3 ? 'opacity-40 grayscale' : 'cursor-pointer hover:scale-110'}`}
-        onClick={() => !progress.m3 && setScene(SCENES.MISSION_3)}
-      >
-        <div className={`w-12 h-12 flex items-center justify-center border-2 border-zinc-900 relative z-10 transition-colors ${progress.m3 ? 'bg-zinc-300' : 'bg-white group-hover:bg-[#4dff88]'}`}>
-          {progress.m3 ? <CheckCircle2 size={20}/> : <Fish size={24} className="text-zinc-900" />}
-        </div>
-        <div className="w-3 h-3 bg-zinc-900 rounded-full absolute -bottom-1.5 -left-1.5 z-20"></div>
-        <span className="mt-2 text-xs font-bold bg-zinc-900 text-white px-2 py-1 rotate-1">幽靈魚</span>
+      {/* Visual Overlay elements that float above map */}
+      <div className="absolute top-4 left-4 z-[1000] bg-zinc-900 text-white p-2 border-2 border-[#4dff88] font-mono text-[10px]">
+        LAT_LON: 25.01°N 121.53°E
       </div>
 
       {/* Finale Trigger */}
       {allDone && (
-        <div className="absolute inset-0 bg-white/90 z-50 flex flex-col items-center justify-center animate-fade-in p-8">
+        <div className="absolute inset-0 bg-white/90 z-[2000] flex flex-col items-center justify-center animate-fade-in p-8">
           <div className="relative mb-6">
             <Waves size={64} className="text-zinc-900" />
             <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#4dff88] rounded-full mix-blend-multiply animate-ping"></div>
@@ -339,10 +393,12 @@ function MapScene({ setScene, progress }: MapSceneProps) {
   );
 }
 
-// --- Mission 1: History Sort (Collage Style) ---
+const unknowSVG = <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
+
+// --- Mission 1: History Sort ---
 function Mission1({ setScene, setProgress }: MissionProps) {
   const [dialogStep, setDialogStep] = useState(0);
-  const [showGame, setShowGame] = useState(false); // Controls when game appears
+  const [showGame, setShowGame] = useState(false);
   const [complete, setComplete] = useState(false);
   
   const cards = [
@@ -373,7 +429,6 @@ function Mission1({ setScene, setProgress }: MissionProps) {
 
   return (
     <div className="h-full bg-[#f4f4f5] relative flex flex-col p-6">
-       {/* Background decorative text */}
        <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
          <h1 className="text-9xl font-black">HIST</h1>
        </div>
@@ -385,9 +440,11 @@ function Mission1({ setScene, setProgress }: MissionProps) {
         <button onClick={() => setScene(SCENES.MAP)}><X size={20} /></button>
       </div>
 
+      <div>
+        { !complete ? unknowSVG : <img src={CATFISH_BASE64} alt="Catfish"/>}
+      </div>
+
       <div className="flex-1 z-10 flex flex-col items-center justify-center relative">
-        
-        {/* Phase 1: Narrative - Only show dialogues */}
         {!showGame && (
            <div className="w-full absolute bottom-10 z-50">
              <DialogBox 
@@ -395,17 +452,14 @@ function Mission1({ setScene, setProgress }: MissionProps) {
                 onNext={handleNextDialog}
                 isEnd={dialogStep === narrative.length - 1}
              />
-             {/* Visual helper for narration phase */}
              <div className="absolute -top-60 left-0 right-0 flex justify-center opacity-10 pointer-events-none">
                 <History size={160} className="text-zinc-900" />
              </div>
            </div>
         )}
 
-        {/* Phase 2: Game Area - Show only after narration */}
         {showGame && !complete && (
           <div className="w-full space-y-6 animate-fade-in relative">
-            {/* Connection Line */}
             <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-zinc-300 -z-10 border-l-2 border-dashed border-zinc-400"></div>
             
             <p className="text-center font-mono text-xs text-zinc-500 bg-white inline-block px-2 mx-auto block border border-zinc-300">點擊卡片重組順序</p>
@@ -424,7 +478,6 @@ function Mission1({ setScene, setProgress }: MissionProps) {
           </div>
         )}
 
-        {/* Phase 3: Complete */}
         {complete && (
           <div className="animate-fade-in text-center w-full">
             <div className="border-4 border-zinc-900 p-8 bg-white relative inline-block mb-8">
@@ -446,7 +499,7 @@ function Mission1({ setScene, setProgress }: MissionProps) {
   );
 }
 
-// --- Mission 2: Ecology Connect (Geometric/Green) ---
+// --- Mission 2: Ecology Connect ---
 function Mission2({ setScene, setProgress }: MissionProps) {
   const [step, setStep] = useState(0);
   const [litNodes, setLitNodes] = useState<number[]>([]);
@@ -463,7 +516,6 @@ function Mission2({ setScene, setProgress }: MissionProps) {
 
   return (
     <div className="h-full bg-zinc-900 relative flex flex-col p-6">
-      {/* Dark background for neon effect */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
 
       <div className="z-10 mb-6 flex justify-between items-center border-b border-[#4dff88] pb-2">
@@ -541,7 +593,7 @@ function Mission2({ setScene, setProgress }: MissionProps) {
   );
 }
 
-// --- Mission 3: Ghost Fish (AR Scan) ---
+// --- Mission 3: Ghost Fish ---
 function Mission3({ setScene, setProgress }: MissionProps) {
   const [dialogStep, setDialogStep] = useState(0);
   const [mode, setMode] = useState<'NARRATIVE' | 'CAMERA' | 'SUCCESS'>('NARRATIVE'); 
@@ -580,8 +632,6 @@ function Mission3({ setScene, setProgress }: MissionProps) {
       </div>
 
       <div className="flex-1 relative flex flex-col items-center pt-4">
-        
-        {/* Phase 1: Narrative */}
         {mode === 'NARRATIVE' && (
           <div className="flex-1 flex items-center justify-center w-full">
              <div className="absolute top-1/4 opacity-20 animate-pulse-slow">
@@ -595,14 +645,11 @@ function Mission3({ setScene, setProgress }: MissionProps) {
           </div>
         )}
 
-        {/* Phase 2: AR Camera */}
         {mode === 'CAMERA' && (
           <div className="w-full flex-1 flex flex-col animate-fade-in relative">
              <div className="flex-1 bg-zinc-800 relative overflow-hidden border-2 border-zinc-900 rounded-sm">
-                {/* Fake Camera Feed Background */}
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')] bg-cover bg-center grayscale opacity-60"></div>
                 
-                {/* Scanning Overlay UI */}
                 <div className="absolute inset-8 border-2 border-white/50 flex items-center justify-center">
                    <div className="w-4 h-4 border-t-2 border-l-2 border-[#4dff88] absolute top-0 left-0 -translate-x-1 -translate-y-1"></div>
                    <div className="w-4 h-4 border-t-2 border-r-2 border-[#4dff88] absolute top-0 right-0 translate-x-1 -translate-y-1"></div>
@@ -634,12 +681,10 @@ function Mission3({ setScene, setProgress }: MissionProps) {
           </div>
         )}
 
-        {/* Phase 3: Success */}
         {mode === 'SUCCESS' && (
           <div className="animate-fade-in text-center w-full mt-10">
              <div className="inline-block relative mb-8">
                  <div className="w-40 h-40 bg-zinc-900 flex items-center justify-center border-4 border-[#4dff88] shadow-[8px_8px_0px_0px_rgba(24,24,27,1)]">
-                     {/* Glitchy Catfish Art Representation */}
                      <Fish size={80} className="text-[#4dff88]" />
                      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-30 mix-blend-overlay"></div>
                  </div>
@@ -679,7 +724,6 @@ function FinaleScene() {
   if (pledged) {
     return (
       <div className="h-full bg-[#e8e8e6] flex flex-col items-center justify-center p-8 text-center animate-fade-in relative overflow-hidden">
-        {/* Deco lines */}
         <div className="absolute top-0 left-0 w-full h-2 bg-[#4dff88]"></div>
         <div className="absolute bottom-0 left-0 w-full h-2 bg-zinc-900"></div>
 
@@ -717,7 +761,6 @@ function FinaleScene() {
         <p className="text-zinc-500 font-serif italic">重新建立連結。</p>
       </div>
 
-      {/* Action 1 */}
       <div className="mb-8 p-6 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_#e5e5e5]">
         <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <div className="w-3 h-3 bg-[#4dff88] border border-zinc-900"></div> 
@@ -736,7 +779,6 @@ function FinaleScene() {
         </div>
       </div>
 
-      {/* Action 2 */}
       <div className="mb-8 p-6 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_#e5e5e5]">
         <h3 className="font-bold text-zinc-900 mb-4 flex items-center gap-2 uppercase tracking-wide">
           <div className="w-3 h-3 bg-[#4dff88] border border-zinc-900"></div> 
