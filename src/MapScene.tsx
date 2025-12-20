@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { Waves } from 'lucide-react';
-import { SCENES, CENTER, MISSIONS, CATFISH_BASE64 } from './constants'
+import { SCENES, CENTER, MISSIONS } from './constants'
 
 const getIconSvg = (type: 'unknown' | 'check' | SCENES) => {
   let svgs = {
     unknown: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
     check: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
   };
-  svgs[SCENES.MISSION_1] = `<img src="${CATFISH_BASE64}" style="width: 100%; height: auto; display: block;" alt="Catfish"/>`;
+  svgs[SCENES.MISSION_1] = `<img src="/mission-1-catfish.png" style="width: 100%; height: auto; display: block;" alt="Catfish"/>`;
   return svgs[type];
 };
 

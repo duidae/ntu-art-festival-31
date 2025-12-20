@@ -8,7 +8,7 @@ import {
   X, 
   Fish, 
 } from 'lucide-react';
-import { SCENES, CATFISH_BASE64 } from './constants'
+import { SCENES } from './constants'
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -132,8 +132,8 @@ export const Mission1 = ({ setScene, setProgress }: MissionProps) => {
         <button onClick={() => setScene(SCENES.MAP)}><X size={20} /></button>
       </div>
 
-      <div>
-        { !complete ? unknowSVG : <img src={CATFISH_BASE64} alt="Catfish"/>}
+      <div className="flex-1 flex items-center justify-center">
+        
       </div>
 
       <div className="flex-1 z-10 flex flex-col items-center justify-center relative">

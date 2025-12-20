@@ -11,6 +11,7 @@ import { MapScene } from './MapScene';
 import { Mission1 } from './Mission1Scene';
 import { Mission2 } from './Mission2Scene';
 import { Mission3 } from './Mission3Scene';
+import { BranchScene } from './BranchScene';
 import { FinalScene } from './FinalScene';
 
 /**
@@ -50,6 +51,9 @@ export default function App() {
           {scene === SCENES.MISSION_1 && <Mission1 setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.MISSION_2 && <Mission2 setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.MISSION_3 && <Mission3 setScene={setScene} setProgress={setProgress} />}
+          {scene === SCENES.BRANCH_1 && <BranchScene setScene={setScene} setProgress={setProgress} />}
+          {scene === SCENES.BRANCH_2 && <BranchScene setScene={setScene} setProgress={setProgress} />}
+          {scene === SCENES.BRANCH_3 && <BranchScene setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.FINALE && <FinalScene />}
         </div>
 
