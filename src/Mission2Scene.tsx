@@ -176,4 +176,5 @@ export const Mission2 = ({ setScene, setProgress }: MissionProps) => {
     </div>
   );
 };
+
 export default Mission2;

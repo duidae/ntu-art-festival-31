@@ -85,9 +85,6 @@ interface MissionProps extends SceneProps {
   setProgress: React.Dispatch<React.SetStateAction<{ m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean}>>;
 }
 
-
-const unknowSVG = <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-
 export const BranchScene = ({ setScene, setProgress }: MissionProps) => {
   const [dialogStep, setDialogStep] = useState(0);
   const [showGame, setShowGame] = useState(false);
