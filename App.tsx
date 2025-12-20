@@ -20,7 +20,7 @@ import {
   HelpCircle 
 } from 'lucide-react';
 import L from 'leaflet';
-import { CATFISH_BASE64 } from './constants'
+import { CENTER, MISSIONS, CATFISH_BASE64 } from './constants'
 
 /**
  * 圳下之聲：瑠公圳的隱地下生態 (Voices from the Underground)
@@ -133,6 +133,9 @@ enum SCENES {
   MISSION_1 = 'MISSION_1',
   MISSION_2 = 'MISSION_2',
   MISSION_3 = 'MISSION_3',
+  BRANCH_1 = 'BRANCH_1',
+  BRANCH_2 = 'BRANCH_2',
+  BRANCH_3 = 'BRANCH_3',
   FINALE = 'FINALE'
 }
 
@@ -140,7 +143,7 @@ enum SCENES {
 
 export default function App() {
   const [scene, setScene] = useState<SCENES>(SCENES.INTRO);
-  const [progress, setProgress] = useState({ m1: false, m2: false, m3: false });
+  const [progress, setProgress] = useState({ m1: false, m2: false, m3: false, b1: false, b2: false, b3: false });
 
   return (
     <div className="min-h-screen bg-[#dcdcdc] flex items-center justify-center p-0 md:p-8 font-sans text-zinc-900">
@@ -202,11 +205,11 @@ interface SceneProps {
 }
 
 interface MapSceneProps extends SceneProps {
-  progress: { m1: boolean; m2: boolean; m3: boolean };
+  progress: { m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean};
 }
 
 interface MissionProps extends SceneProps {
-  setProgress: React.Dispatch<React.SetStateAction<{ m1: boolean; m2: boolean; m3: boolean }>>;
+  setProgress: React.Dispatch<React.SetStateAction<{ m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean}>>;
 }
 
 function IntroScene({ setScene }: SceneProps) {
@@ -267,16 +270,56 @@ function MapScene({ setScene, progress }: MapSceneProps) {
   const mapInstanceRef = useRef<L.Map | null>(null);
   const allDone = progress.m1 && progress.m2 && progress.m3;
 
+  const mainMissions = [
+    { id: SCENES.MISSION_1, pos: MISSIONS.Main[0].coordinates as L.LatLngExpression, title: MISSIONS.Main[0].title, done: progress.m1 },
+    { id: SCENES.MISSION_2, pos: MISSIONS.Main[1].coordinates as L.LatLngExpression, title: MISSIONS.Main[1].title, done: progress.m2 },
+    { id: SCENES.MISSION_3, pos: MISSIONS.Main[2].coordinates as L.LatLngExpression, title: MISSIONS.Main[2].title, done: progress.m3 },
+  ];
+
+  const branchMissions = [
+    { id: SCENES.BRANCH_1, pos: MISSIONS.Branch[0].coordinates as L.LatLngExpression, title: MISSIONS.Branch[0].title, done: progress.b1 },
+    { id: SCENES.BRANCH_2, pos: MISSIONS.Branch[1].coordinates as L.LatLngExpression, title: MISSIONS.Branch[1].title, done: progress.b2 },
+    { id: SCENES.BRANCH_3, pos: MISSIONS.Branch[2].coordinates as L.LatLngExpression, title: MISSIONS.Branch[2].title, done: progress.b3 },
+  ];
+
+  const userIcon = L.divIcon({
+    className: 'user-icon',
+    html: `<div class="w-4 h-4 bg-zinc-900 rotate-45 border-2 border-[#4dff88] animate-spin-slow"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+
+  const createMarkerIcon = (isDone: boolean, isMain: boolean = true) => L.divIcon({
+    className: 'custom-brutalist-icon',
+    html: `
+      <div style="
+        width: ${isMain ? '32' : '20'}px;
+        height: ${isMain ? '32' : '20'}px;
+        background: ${isDone ? '#d4d4d8' : '#4dff88'}; 
+        border: 2px solid #18181b; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        box-shadow: 3px 3px 0px 0px #18181b;
+      ">
+        <div style="width: 8px; height: 8px; background: #18181b; rotate: 45deg;"></div>
+      </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  });
+
+  const createBranchMarkerIcon = (isDone: boolean) => {
+    return createMarkerIcon(isDone, false);
+  }
+
   useEffect(() => {
     if (mapContainerRef.current && !mapInstanceRef.current) {
-      // Coordinates around National Taiwan University area in Taipei
-      const center: L.LatLngExpression = [25.018429, 121.538275];
-      
       const map = L.map(mapContainerRef.current, {
         zoomControl: true,
         attributionControl: true,
         scrollWheelZoom: true,
-      }).setView(center, 15);
+      }).setView(CENTER, 15);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -285,52 +328,48 @@ function MapScene({ setScene, progress }: MapSceneProps) {
 
       mapInstanceRef.current = map;
 
-      // Define Custom Markers
-      const createMarkerIcon = (isDone: boolean, color: string = '#4dff88') => L.divIcon({
-        className: 'custom-brutalist-icon',
-        html: `
-          <div style="
-            width: 32px; 
-            height: 32px; 
-            background: ${isDone ? '#d4d4d8' : color}; 
-            border: 2px solid #18181b; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: 3px 3px 0px 0px #18181b;
-          ">
-            <div style="width: 8px; height: 8px; background: #18181b; rotate: 45deg;"></div>
-          </div>
-        `,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-      });
+      // TODO: Get user location dynamically
+      L.marker(CENTER, { icon: userIcon }).addTo(map);
 
-      const userIcon = L.divIcon({
-        className: 'user-icon',
-        html: `<div class="w-4 h-4 bg-zinc-900 rotate-45 border-2 border-[#4dff88] animate-spin-slow"></div>`,
-        iconSize: [16, 16],
-        iconAnchor: [8, 8],
-      });
-
-      // User Position
-      L.marker(center, { icon: userIcon }).addTo(map);
-
-      // Mission Markers
-      const missions = [
-        { id: SCENES.MISSION_1, pos: [25.017432, 121.539507] as L.LatLngExpression, title: '幽靈土虱', done: progress.m1 },
-        { id: SCENES.MISSION_2, pos: [25.015523, 121.538850] as L.LatLngExpression, title: '幽靈外來種', done: progress.m2 },
-        { id: SCENES.MISSION_3, pos: [25.020811, 121.534216] as L.LatLngExpression, title: '幽靈牛屎鯽', done: progress.m3 },
-      ];
-
-      missions.forEach((m) => {
+      mainMissions.forEach((m) => {
         const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done) }).addTo(map);
         const popupContent = document.createElement('div');
         popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
         
-        // FIX: Replaced broken img tag and Shield icon with custom SVG strings
         const iconHtml = m.done 
-          ? `<div class="w-44 h-44 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg(m.id)}
+             </div>`
+          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg('unknown')}
+             </div>`;
+
+        popupContent.innerHTML = `
+          ${iconHtml}
+          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
+            ${m.done ? '檔案已歸檔' : '進入節點'}
+          </button>
+        `;
+        
+        const btn = popupContent.querySelector('button');
+        if (btn) {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            setScene(m.id);
+          };
+        }
+
+        marker.bindPopup(popupContent, { minWidth: 120 });
+      });
+
+      branchMissions.forEach((m) => {
+        const marker = L.marker(m.pos, { icon: createBranchMarkerIcon(m.done) }).addTo(map);
+        const popupContent = document.createElement('div');
+        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+        
+        const iconHtml = m.done 
+          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
                ${getIconSvg(m.id)}
              </div>`
           : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
