@@ -5,6 +5,7 @@ import {
   Waves,
   Map as MapIcon,
 } from 'lucide-react';
+import { SCENES } from './constants';
 import { IntroScene } from './IntroScene';
 import { MapScene } from './MapScene';
 import { Mission1 } from './Mission1Scene';
@@ -25,18 +26,6 @@ const NoiseOverlay = () => (
     }}
   />
 );
-
-enum SCENES {
-  INTRO = 'INTRO',
-  MAP = 'MAP',
-  MISSION_1 = 'MISSION_1',
-  MISSION_2 = 'MISSION_2',
-  MISSION_3 = 'MISSION_3',
-  BRANCH_1 = 'BRANCH_1',
-  BRANCH_2 = 'BRANCH_2',
-  BRANCH_3 = 'BRANCH_3',
-  FINALE = 'FINALE'
-}
 
 export default function App() {
   const [scene, setScene] = useState<SCENES>(SCENES.INTRO);

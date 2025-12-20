@@ -8,7 +8,7 @@ import {
   X, 
   Fish, 
 } from 'lucide-react';
-import { CATFISH_BASE64 } from './constants'
+import { SCENES, CATFISH_BASE64 } from './constants'
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -76,19 +76,6 @@ const DialogBox: React.FC<DialogBoxProps> = ({ speaker, text, onNext, isEnd }) =
     )}
   </div>
 );
-
-// --- Game States ---
-enum SCENES {
-  INTRO = 'INTRO',
-  MAP = 'MAP',
-  MISSION_1 = 'MISSION_1',
-  MISSION_2 = 'MISSION_2',
-  MISSION_3 = 'MISSION_3',
-  BRANCH_1 = 'BRANCH_1',
-  BRANCH_2 = 'BRANCH_2',
-  BRANCH_3 = 'BRANCH_3',
-  FINALE = 'FINALE'
-}
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;
