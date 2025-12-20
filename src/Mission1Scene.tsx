@@ -133,7 +133,7 @@ export const Mission1 = ({ setScene, setProgress }: MissionProps) => {
       </div>
 
       <div className="flex-1 flex items-center justify-center">
-        
+        <iframe width="100%" height="100%" title="Catfish" frameBorder="0" allowFullScreen mozAllowFullScreen="true" webkitAllowFullScreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/bae8b44a11b14b639e42b54de0be18ff/embed"> </iframe>
       </div>
 
       <div className="flex-1 z-10 flex flex-col items-center justify-center relative">
