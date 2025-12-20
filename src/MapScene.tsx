@@ -1,0 +1,233 @@
+import React, { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import { Waves } from 'lucide-react';
+import { CENTER, MISSIONS, CATFISH_BASE64 } from './constants'
+
+// --- Helper for HTML Strings (since Leaflet popups use innerHTML) ---
+const getIconSvg = (type: 'unknown' | 'check' | SCENES) => {
+  let svgs = {
+    unknown: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+    check: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+  };
+  svgs[SCENES.MISSION_1] = `<img src="${CATFISH_BASE64}" style="width: 100%; height: auto; display: block;" alt="Catfish"/>`;
+  return svgs[type];
+};
+
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'action';
+  className?: string;
+  disabled?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'primary', className = '', disabled = false }) => {
+  const baseStyle = "px-6 py-3 font-bold transition-all active:translate-y-1 relative group overflow-hidden border-2 border-zinc-900 select-none";
+  
+  const variants = {
+    primary: "bg-[#4dff88] text-zinc-900 hover:bg-[#3ce677]", 
+    secondary: "bg-zinc-900 text-[#e8e8e6] hover:bg-zinc-800",
+    ghost: "bg-transparent text-zinc-900 hover:bg-white/50",
+    action: "bg-zinc-900 text-[#4dff88] hover:text-white"
+  };
+
+  return (
+    <button 
+      onClick={onClick} 
+      disabled={disabled}
+      className={`${baseStyle} ${variants[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+    >
+      <span className="absolute top-1 right-1 w-1 h-1 bg-current opacity-50"></span>
+      <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
+    </button>
+  );
+};
+
+enum SCENES {
+  INTRO = 'INTRO',
+  MAP = 'MAP',
+  MISSION_1 = 'MISSION_1',
+  MISSION_2 = 'MISSION_2',
+  MISSION_3 = 'MISSION_3',
+  BRANCH_1 = 'BRANCH_1',
+  BRANCH_2 = 'BRANCH_2',
+  BRANCH_3 = 'BRANCH_3',
+  FINALE = 'FINALE'
+}
+
+interface SceneProps {
+  setScene: (scene: SCENES) => void;
+}
+
+interface MapSceneProps extends SceneProps {
+  progress: { m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean};
+}
+
+export const MapScene = ({ setScene, progress }: MapSceneProps) => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const allDone = progress.m1 && progress.m2 && progress.m3;
+
+  const mainMissions = [
+    { id: SCENES.MISSION_1, pos: MISSIONS.Main[0].coordinates as L.LatLngExpression, title: MISSIONS.Main[0].title, done: progress.m1 },
+    { id: SCENES.MISSION_2, pos: MISSIONS.Main[1].coordinates as L.LatLngExpression, title: MISSIONS.Main[1].title, done: progress.m2 },
+    { id: SCENES.MISSION_3, pos: MISSIONS.Main[2].coordinates as L.LatLngExpression, title: MISSIONS.Main[2].title, done: progress.m3 },
+  ];
+
+  const branchMissions = [
+    { id: SCENES.BRANCH_1, pos: MISSIONS.Branch[0].coordinates as L.LatLngExpression, title: MISSIONS.Branch[0].title, done: progress.b1 },
+    { id: SCENES.BRANCH_2, pos: MISSIONS.Branch[1].coordinates as L.LatLngExpression, title: MISSIONS.Branch[1].title, done: progress.b2 },
+    { id: SCENES.BRANCH_3, pos: MISSIONS.Branch[2].coordinates as L.LatLngExpression, title: MISSIONS.Branch[2].title, done: progress.b3 },
+  ];
+
+  const userIcon = L.divIcon({
+    className: 'user-icon',
+    html: `<div class="w-4 h-4 bg-zinc-900 rotate-45 border-2 border-[#4dff88] animate-spin-slow"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+
+  const createMarkerIcon = (isDone: boolean, isMain: boolean = true) => L.divIcon({
+    className: 'custom-brutalist-icon',
+    html: `
+      <div style="
+        width: ${isMain ? '32' : '20'}px;
+        height: ${isMain ? '32' : '20'}px;
+        background: ${isDone ? '#d4d4d8' : '#4dff88'}; 
+        border: 2px solid #18181b; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        box-shadow: 3px 3px 0px 0px #18181b;
+      ">
+        <div style="width: 8px; height: 8px; background: #18181b; rotate: 45deg;"></div>
+      </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  });
+
+  const createBranchMarkerIcon = (isDone: boolean) => {
+    return createMarkerIcon(isDone, false);
+  }
+
+  useEffect(() => {
+    if (mapContainerRef.current && !mapInstanceRef.current) {
+      const map = L.map(mapContainerRef.current, {
+        zoomControl: true,
+        attributionControl: true,
+        scrollWheelZoom: true,
+      }).setView(CENTER, 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      mapInstanceRef.current = map;
+
+      // TODO: Get user location dynamically
+      L.marker(CENTER, { icon: userIcon }).addTo(map);
+
+      mainMissions.forEach((m) => {
+        const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done) }).addTo(map);
+        const popupContent = document.createElement('div');
+        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+        
+        const iconHtml = m.done 
+          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg(m.id)}
+             </div>`
+          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg('unknown')}
+             </div>`;
+
+        popupContent.innerHTML = `
+          ${iconHtml}
+          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
+            ${m.done ? '檔案已歸檔' : '進入節點'}
+          </button>
+        `;
+        
+        const btn = popupContent.querySelector('button');
+        if (btn) {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            setScene(m.id);
+          };
+        }
+
+        marker.bindPopup(popupContent, { minWidth: 120 });
+      });
+
+      branchMissions.forEach((m) => {
+        const marker = L.marker(m.pos, { icon: createBranchMarkerIcon(m.done) }).addTo(map);
+        const popupContent = document.createElement('div');
+        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+        
+        const iconHtml = m.done 
+          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg(m.id)}
+             </div>`
+          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+               ${getIconSvg('unknown')}
+             </div>`;
+
+        popupContent.innerHTML = `
+          ${iconHtml}
+          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
+            ${m.done ? '檔案已歸檔' : '進入節點'}
+          </button>
+        `;
+        
+        const btn = popupContent.querySelector('button');
+        if (btn) {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            setScene(m.id);
+          };
+        }
+
+        marker.bindPopup(popupContent, { minWidth: 120 });
+      });
+    }
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [setScene, progress]);
+
+  return (
+    <div className="h-full bg-[#e8e8e6] relative overflow-hidden flex flex-col">
+      {/* Map Container */}
+      <div ref={mapContainerRef} className="flex-1 z-0 grayscale contrast-125" />
+      
+      {/* Visual Overlay elements that float above map */}
+      <div className="absolute top-4 left-4 z-[1000] bg-zinc-900 text-white p-2 border-2 border-[#4dff88] font-mono text-[10px]">
+        LAT_LON: 25.01°N 121.53°E
+      </div>
+
+      {/* Finale Trigger */}
+      {allDone && (
+        <div className="absolute inset-0 bg-white/90 z-[2000] flex flex-col items-center justify-center animate-fade-in p-8">
+          <div className="relative mb-6">
+            <Waves size={64} className="text-zinc-900" />
+            <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#4dff88] rounded-full mix-blend-multiply animate-ping"></div>
+          </div>
+          <h2 className="text-3xl font-black mb-2 text-zinc-900 uppercase">系統同步完成</h2>
+          <p className="text-zinc-500 font-mono text-xs mb-8">ALL NODES CONNECTED.</p>
+          <Button variant="secondary" onClick={() => setScene(SCENES.FINALE)} className="w-full">
+            進入地下終章
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MapScene;
