@@ -33,11 +33,14 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     { id: SCENES.MISSION_3, pos: MISSIONS.Main[2].coordinates as L.LatLngExpression, title: MISSIONS.Main[2].title, done: progress.m3 },
   ];
 
-  const branchMissions = [
-    { id: SCENES.BRANCH_1, pos: MISSIONS.Branch[0].coordinates as L.LatLngExpression, title: MISSIONS.Branch[0].title, done: progress.b1 },
-    { id: SCENES.BRANCH_2, pos: MISSIONS.Branch[1].coordinates as L.LatLngExpression, title: MISSIONS.Branch[1].title, done: progress.b2 },
-    { id: SCENES.BRANCH_3, pos: MISSIONS.Branch[2].coordinates as L.LatLngExpression, title: MISSIONS.Branch[2].title, done: progress.b3 },
-  ];
+  const branchMissions = MISSIONS.Branch.map(branch => {
+    return {
+      id: SCENES.BRANCH_1,
+      pos: branch.coordinates as L.LatLngExpression,
+      title: branch.title,
+      done: true
+    };
+  });
 
   const userIcon = L.divIcon({
     className: 'user-icon',
@@ -166,7 +169,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       {/* Map Container */}
       <div ref={mapContainerRef} className="flex-1 z-0 grayscale contrast-125" />
       
-      {/* Visual Overlay elements that float above map */}
+      {/* TODO: use dynamic lat/lon */}
       <div className="absolute top-4 left-4 z-[1000] bg-zinc-900 text-white p-2 border-2 border-[#4dff88] font-mono text-[10px]">
         LAT_LON: 25.01°N 121.53°E
       </div>

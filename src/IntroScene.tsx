@@ -4,7 +4,7 @@ import {
   Map as MapIcon,
 } from 'lucide-react';
 import { Button } from './components/Button';
-import { SCENES } from './constants';
+import { SCENES, APP_NAME } from './constants';
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;
@@ -29,7 +29,7 @@ export const IntroScene = ({ setScene }: SceneProps) => {
       </svg>
 
       <div className="z-10 w-full flex flex-col items-start relative">
-        <h2 className="text-xl font-bold text-zinc-400 mb-2 rotate-1">31TH_FESTIVAL</h2>
+        <h2 className="text-xl font-bold text-zinc-400 mb-2 rotate-1" dangerouslySetInnerHTML={{ __html: APP_NAME }}></h2>
         <h1 className="text-6xl font-black text-zinc-900 leading-[0.85] tracking-tighter mb-6 relative">
           圳下<br/>
           之聲
@@ -47,7 +47,8 @@ export const IntroScene = ({ setScene }: SceneProps) => {
         {step >= 1 && (
           <div className="animate-fade-in w-full">
             <div className="bg-white border-2 border-zinc-900 p-4 mb-8 shadow-[4px_4px_0px_0px_#4dff88]">
-              <p className="font-mono text-xs text-zinc-400 mb-1">// INCOMING MESSAGE</p>
+              {/* TODO: make ... jump */}
+              <p className="font-mono text-xs text-zinc-400 mb-1">// INCOMING MESSAGE...</p>
               <p className="text-sm font-bold text-zinc-900">
                 「若你願意傾聽，沿著地面裂縫去找我們。」
               </p>

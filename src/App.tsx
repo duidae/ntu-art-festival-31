@@ -5,7 +5,7 @@ import {
   Waves,
   Map as MapIcon,
 } from 'lucide-react';
-import { SCENES } from './constants';
+import { SCENES, APP_NAME } from './constants';
 import { IntroScene } from './IntroScene';
 import { MapScene } from './MapScene';
 import { Mission1 } from './Mission1Scene';
@@ -38,7 +38,7 @@ export default function App() {
         <NoiseOverlay />
         
         <div className="h-10 border-b-2 border-zinc-900 flex justify-between items-center px-4 bg-white z-50 relative shrink-0">
-          <span className="font-mono font-bold text-xs tracking-widest">31TH_FESTIVAL</span>
+          <span className="font-mono font-bold text-xs tracking-widest" dangerouslySetInnerHTML={{ __html: APP_NAME }}></span>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#4dff88] animate-pulse border border-zinc-900"></div>
             <span className="font-mono text-xs font-bold">訊號連線中</span>
