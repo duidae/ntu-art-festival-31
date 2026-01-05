@@ -103,8 +103,6 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       })
       .catch(err => console.error('Failed to load GeoJSON', err));
 
-     
-
       // TODO: Get user location dynamically
       L.marker(CENTER, { icon: userIcon }).addTo(map);
 
