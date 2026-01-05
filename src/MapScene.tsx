@@ -73,10 +73,6 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     iconAnchor: [16, 16],
   });
 
-  const createBranchMarkerIcon = (isDone: boolean) => {
-    return createMarkerIcon(isDone, false);
-  }
-
   useEffect(() => {
     if (mapContainerRef.current && !mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
@@ -129,7 +125,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       });
 
       branchMissions.forEach((m) => {
-        const marker = L.marker(m.pos, { icon: createBranchMarkerIcon(m.done) }).addTo(map);
+        const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, false) }).addTo(map);
         const popupContent = document.createElement('div');
         popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
         
