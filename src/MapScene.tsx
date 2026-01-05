@@ -25,7 +25,6 @@ interface MapSceneProps extends SceneProps {
 // TODO: 
 // 1. 增加 水道map layer
 // 2. 本計劃/藝術季作品分隔顯示
-// 3. 點icon地圖會置中
 
 export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -125,7 +124,8 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
           };
         }
 
-        marker.bindPopup(popupContent, { minWidth: 120 });
+        marker.on('click', () => map.panTo(marker.getLatLng()));
+        marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
       });
 
       branchMissions.forEach((m) => {
@@ -157,7 +157,8 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
           };
         }
 
-        marker.bindPopup(popupContent, { minWidth: 120 });
+        marker.on('click', () => map.panTo(marker.getLatLng()));
+        marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
       });
     }
 
