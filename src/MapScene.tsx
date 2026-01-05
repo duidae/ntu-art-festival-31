@@ -22,7 +22,10 @@ interface MapSceneProps extends SceneProps {
   progress: { m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean};
 }
 
-// TODO: 增加 水道map layer, 本計劃/藝術季作品分隔顯示
+// TODO: 
+// 1. 增加 水道map layer
+// 2. 本計劃/藝術季作品分隔顯示
+// 3. 點icon地圖會置中
 
 export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
