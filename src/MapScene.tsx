@@ -22,6 +22,8 @@ interface MapSceneProps extends SceneProps {
   progress: { m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean};
 }
 
+// TODO: 增加 水道map layer, 本計劃/藝術季作品分隔顯示
+
 export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -76,7 +78,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   useEffect(() => {
     if (mapContainerRef.current && !mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        zoomControl: true,
+        zoomControl: false,
         attributionControl: true,
         scrollWheelZoom: true,
       }).setView(CENTER, 15);

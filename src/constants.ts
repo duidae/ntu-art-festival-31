@@ -29,14 +29,18 @@ export const MISSIONS = {
     coordinates: [25.019397, 121.534129],
   }],
   Branch: [{
+    title: '特一號大排(新生大排)起點',
+    coordinates: [25.016538412134473, 121.53344031408966],
+  }, {
     title: '霧裡薛圳第二支線遺址',
     coordinates: [25.02142546608335, 121.53331719333822],
     link: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
+    link2: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
   }, {
     title: '民族實中重現北市水圳風華計畫',
     coordinates: [25.009941, 121.539239],
   }, {
-    title: '倪蔣懷故居',
+    title: '倪蔣懷 - 《臺北郊外》',
     coordinates: [25.01347054981437, 121.53613110546853],
     link: 'https://www.gch.tw/works/73',
   }, {
