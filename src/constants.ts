@@ -64,7 +64,7 @@ export const MISSIONS = {
     title: '志鴻館水圳意象(草溝)',
     coordinates: [25.018947, 121.539132],
   }, {
-    title: '新生南路水圳意象重現',
+    title: '新生南路水圳意象重現(堀川)',
     coordinates: [25.020390, 121.5343171],
   },]
 };
