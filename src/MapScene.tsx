@@ -106,71 +106,43 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       // TODO: Get user location dynamically
       L.marker(CENTER, { icon: userIcon }).addTo(map);
 
-      mainMissions.forEach((m) => {
-        const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done) }).addTo(map);
-        const popupContent = document.createElement('div');
-        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
-        
-        const iconHtml = m.done 
-          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-               ${getIconSvg(m.id)}
-             </div>`
-          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-               ${getIconSvg('unknown')}
-             </div>`;
+      const addMissionMarkers = (missions: typeof mainMissions | typeof branchMissions, isMain: boolean = false) => {
+        missions.forEach((m) => {
+          const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, isMain) }).addTo(map);
+          const popupContent = document.createElement('div');
+          popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
 
-        popupContent.innerHTML = `
-          ${iconHtml}
-          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
-          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
-            ${m.done ? '檔案已歸檔' : '進入節點'}
-          </button>
-        `;
-        
-        const btn = popupContent.querySelector('button');
-        if (btn) {
-          btn.onclick = (e) => {
-            e.preventDefault();
-            setScene(m.id);
-          };
-        }
+          const iconHtml = m.done 
+            ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+                 ${getIconSvg(m.id)}
+               </div>`
+            : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
+                 ${getIconSvg('unknown')}
+               </div>`;
 
-        marker.on('click', () => map.panTo(marker.getLatLng()));
-        marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
-      });
+          popupContent.innerHTML = `
+            ${iconHtml}
+            <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+            <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
+              ${m.done ? '檔案已歸檔' : '進入節點'}
+            </button>
+          `;
 
-      branchMissions.forEach((m) => {
-        const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, false) }).addTo(map);
-        const popupContent = document.createElement('div');
-        popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
-        
-        const iconHtml = m.done 
-          ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-               ${getIconSvg(m.id)}
-             </div>`
-          : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-               ${getIconSvg('unknown')}
-             </div>`;
+          const btn = popupContent.querySelector('button');
+          if (btn) {
+            btn.onclick = (e) => {
+              e.preventDefault();
+              setScene(m.id);
+            };
+          }
 
-        popupContent.innerHTML = `
-          ${iconHtml}
-          <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
-          <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
-            ${m.done ? '檔案已歸檔' : '進入節點'}
-          </button>
-        `;
-        
-        const btn = popupContent.querySelector('button');
-        if (btn) {
-          btn.onclick = (e) => {
-            e.preventDefault();
-            setScene(m.id);
-          };
-        }
+          marker.on('click', () => map.panTo(marker.getLatLng()));
+          marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
+        });
+      };
 
-        marker.on('click', () => map.panTo(marker.getLatLng()));
-        marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
-      });
+      addMissionMarkers(mainMissions, true);
+      addMissionMarkers(branchMissions);
     }
 
     return () => {
