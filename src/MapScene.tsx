@@ -73,28 +73,29 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     iconAnchor: [16, 16],
   });
 
-  useEffect(() => {
-    if (mapContainerRef.current && !mapInstanceRef.current) {
-      const map = L.map(mapContainerRef.current, {
-        zoomControl: false,
-        attributionControl: true,
-        scrollWheelZoom: true,
-      }).setView(CENTER, 15);
+  const initializeMap = (container: HTMLDivElement): L.Map => {
+    const map = L.map(container, {
+      zoomControl: false,
+      attributionControl: true,
+      scrollWheelZoom: true,
+    }).setView(CENTER, 15);
+    return map;
+  };
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
+  const addTileLayer = (map: L.Map) => {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+  };
 
-      mapInstanceRef.current = map;
-
-      fetch('/1932TaipeiWaterRoutes.geojson')
+  const addGeoJsonLayer = (map: L.Map) => {
+    fetch('/1932TaipeiWaterRoutes.geojson')
       .then(res => res.json())
       .then(data => {
         const geoLayer = L.geoJSON(data, {
           filter: f => f.geometry?.type !== "Point"
         }).addTo(map);
-
         L.control.layers(null, {
           '💧1932台北舊水路': geoLayer
         }, {
@@ -102,47 +103,46 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
         }).addTo(map);
       })
       .catch(err => console.error('Failed to load GeoJSON', err));
+  };
 
-      // TODO: Get user location dynamically
-      L.marker(CENTER, { icon: userIcon }).addTo(map);
+  const addUserMarker = (map: L.Map) => {
+    L.marker(CENTER, { icon: userIcon }).addTo(map);
+  };
 
-      const addMissionMarkers = (missions: typeof mainMissions | typeof branchMissions, isMain: boolean = false) => {
-        missions.forEach((m) => {
-          const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, isMain) }).addTo(map);
-          const popupContent = document.createElement('div');
-          popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+  const addMissionMarkers = (map: L.Map, missions: typeof mainMissions | typeof branchMissions, isMain: boolean = false) =>  {
+    missions.forEach((m) => {
+      const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, isMain) }).addTo(map);
+      const popupContent = document.createElement('div');
+      popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
+      const iconHtml = m.done 
+        ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">${getIconSvg(m.id)}</div>`
+        : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">${getIconSvg('unknown')}</div>`;
+      popupContent.innerHTML = `
+        ${iconHtml}
+        <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
+        <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">${m.done ? '檔案已歸檔' : '進入節點'}</button>
+      `;
+      const btn = popupContent.querySelector('button');
+      if (btn) {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          setScene(m.id);
+        };
+      }
+      marker.on('click', () => map.panTo(marker.getLatLng()));
+      marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
+    });
+  };
 
-          const iconHtml = m.done 
-            ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-                 ${getIconSvg(m.id)}
-               </div>`
-            : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">
-                 ${getIconSvg('unknown')}
-               </div>`;
-
-          popupContent.innerHTML = `
-            ${iconHtml}
-            <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>
-            <button class="bg-zinc-900 text-[#4dff88] px-4 py-1 text-[10px] font-bold border-2 border-black hover:bg-zinc-800 transition-colors uppercase">
-              ${m.done ? '檔案已歸檔' : '進入節點'}
-            </button>
-          `;
-
-          const btn = popupContent.querySelector('button');
-          if (btn) {
-            btn.onclick = (e) => {
-              e.preventDefault();
-              setScene(m.id);
-            };
-          }
-
-          marker.on('click', () => map.panTo(marker.getLatLng()));
-          marker.bindPopup(popupContent, { minWidth: 120, autoPan: false });
-        });
-      };
-
-      addMissionMarkers(mainMissions, true);
-      addMissionMarkers(branchMissions);
+  useEffect(() => {
+    if (mapContainerRef.current && !mapInstanceRef.current) {
+      const map = initializeMap(mapContainerRef.current);
+      addTileLayer(map);
+      addGeoJsonLayer(map);
+      addUserMarker(map);
+      addMissionMarkers(map, mainMissions, true);
+      addMissionMarkers(map, branchMissions);
+      mapInstanceRef.current = map;
     }
 
     return () => {
