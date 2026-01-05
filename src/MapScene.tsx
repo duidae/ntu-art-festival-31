@@ -91,11 +91,19 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       fetch('/1932TaipeiWaterRoutes.geojson')
       .then(res => res.json())
       .then(data => {
-        L.geoJSON(data, {
+        const geoLayer = L.geoJSON(data, {
           filter: f => f.geometry?.type !== "Point"
+        }).addTo(map);
+
+        L.control.layers(null, {
+          '💧1932台北舊水路': geoLayer
+        }, {
+          collapsed: false
         }).addTo(map);
       })
       .catch(err => console.error('Failed to load GeoJSON', err));
+
+     
 
       // TODO: Get user location dynamically
       L.marker(CENTER, { icon: userIcon }).addTo(map);
