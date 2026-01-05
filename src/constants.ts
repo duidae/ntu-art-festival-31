@@ -44,6 +44,10 @@ export const MISSIONS = {
     coordinates: [25.01347054981437, 121.53613110546853],
     link: 'https://www.gch.tw/works/73',
   }, {
+    title: '瑠公圳原址紀念碑',
+    coordinates: [25.017749911515796, 121.53358571541791],
+    link: 'https://maps.app.goo.gl/Ph8fcuHWHXMpGrZD9',
+  }, {
     title: '瑠公圳水源池',
     coordinates: [25.016141649719067, 121.53976500223325],
     link: 'https://maps.app.goo.gl/tf4FkGwVxXDzvyK37',
