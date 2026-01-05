@@ -48,6 +48,9 @@ export const MISSIONS = {
     coordinates: [25.016141649719067, 121.53976500223325],
     link: 'https://maps.app.goo.gl/tf4FkGwVxXDzvyK37',
   }, {
+    title: '水工所神秘尼斯湖',
+    coordinates: [25.016486, 121.539349],
+  }, {
     title: '瑠公綠廊銅魚',
     coordinates: [25.042568, 121.544556],
   }, {
