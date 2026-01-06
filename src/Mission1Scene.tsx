@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import { Button } from './components/Button';
 import { DialogBox } from './components/DialogBox';
-import { SCENES } from './constants'
+import { ModelViewer } from './components/ModelViewer';
+import { SCENES, CATFISH_3D_MODEL, CATFISH_3D_MODEL_COVER } from './constants'
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;
@@ -59,6 +60,8 @@ export const Mission1 = ({ setScene, setProgress }: MissionProps) => {
         </h3>
         <button onClick={() => setScene(SCENES.MAP)}><X size={20} /></button>
       </div>
+
+      <ModelViewer src={CATFISH_3D_MODEL} cover={CATFISH_3D_MODEL_COVER} />
 
       <div className="flex-1 flex items-center justify-center">
         <iframe width="100%" height="100%" title="Catfish" frameBorder="0" allowFullScreen mozAllowFullScreen="true" webkitAllowFullScreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/bae8b44a11b14b639e42b54de0be18ff/embed"> </iframe>

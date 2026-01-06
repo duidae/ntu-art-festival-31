@@ -13,6 +13,8 @@ export enum SCENES {
 }
 
 export const CENTER = [25.018429, 121.538275]; // NTU center coordinates
+export const CATFISH_3D_MODEL = '/assets/catfish.glb';
+export const CATFISH_3D_MODEL_COVER = '/assets/mission-1-catfish.png';
 
 const mainMissions = [{
   time: '過去',
