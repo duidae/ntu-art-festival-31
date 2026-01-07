@@ -2,17 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { Waves } from 'lucide-react';
 import { Button } from './components/Button';
-import { SCENES, CENTER, MISSIONS, CATFISH_3D_MODEL_COVER } from './constants'
-
-const getIconSvg = (type: 'unknown' | 'check' | SCENES) => {
-  const catfishURL = new URL(CATFISH_3D_MODEL_COVER, import.meta.url).href;
-  let svgs = {
-    unknown: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
-    check: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-  };
-  svgs[SCENES.MISSION_1] = `<img src="${catfishURL}" style="width: 100%; height: auto; display: block;" alt="Catfish"/>`;
-  return svgs[type];
-};
+import { SCENES, CENTER, MISSIONS } from './constants'
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;
@@ -32,9 +22,23 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   const allDone = progress.m1 && progress.m2 && progress.m3;
 
   const mainMissions = [
-    { id: SCENES.MISSION_1, pos: MISSIONS.Main[0].coordinates as L.LatLngExpression, title: MISSIONS.Main[0].title, done: progress.m1 },
-    { id: SCENES.MISSION_2, pos: MISSIONS.Main[1].coordinates as L.LatLngExpression, title: MISSIONS.Main[1].title, done: progress.m2 },
-    { id: SCENES.MISSION_3, pos: MISSIONS.Main[2].coordinates as L.LatLngExpression, title: MISSIONS.Main[2].title, done: progress.m3 },
+    {
+      id: SCENES.MISSION_1,
+      pos: MISSIONS.Main[0].coordinates as L.LatLngExpression,
+      title: MISSIONS.Main[0].title,
+      img: '<img src="' + (MISSIONS.Main[0].img || '') + '" style="width: 100%; height: auto; display: block;" />',
+      done: progress.m1
+    }, {
+      id: SCENES.MISSION_2,
+      pos: MISSIONS.Main[1].coordinates as L.LatLngExpression,
+      title: MISSIONS.Main[1].title,
+      done: progress.m2
+    }, {
+      id: SCENES.MISSION_3,
+      pos: MISSIONS.Main[2].coordinates as L.LatLngExpression,
+      title: MISSIONS.Main[2].title,
+      done: progress.m3
+    },
   ];
 
   const subMissions = MISSIONS.Sub.map(branch => {
@@ -116,8 +120,8 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       const popupContent = document.createElement('div');
       popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
       const iconHtml = m.done 
-        ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000] overflow-hidden">${m.img || getIconSvg(m.id)}</div>`
-        : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">${getIconSvg('unknown')}</div>`;
+        ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000] overflow-hidden">${m.img}</div>`
+        : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>`;
       popupContent.innerHTML = `
         ${iconHtml}
         <p class="text-[10px] font-black mb-2 uppercase tracking-widest text-zinc-900">${m.title}</p>

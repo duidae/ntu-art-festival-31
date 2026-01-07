@@ -20,6 +20,7 @@ const mainMissions = [{
   time: '過去',
   title: '幽靈土虱',
   coordinates: [25.019714, 121.537269],
+  img: '/mission-1-catfish.png',
 }, {
   time: '現在',
   title: '幽靈外來種',
