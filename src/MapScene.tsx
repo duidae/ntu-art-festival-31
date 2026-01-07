@@ -37,11 +37,12 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     { id: SCENES.MISSION_3, pos: MISSIONS.Main[2].coordinates as L.LatLngExpression, title: MISSIONS.Main[2].title, done: progress.m3 },
   ];
 
-  const branchMissions = MISSIONS.Branch.map(branch => {
+  const subMissions = MISSIONS.Sub.map(branch => {
     return {
       id: SCENES.BRANCH_1,
       pos: branch.coordinates as L.LatLngExpression,
       title: branch.title,
+      img: '<img src="' + (branch.img || '') + '" style="width: 100%; height: auto; display: block;" />',
       done: true
     };
   });
@@ -109,13 +110,13 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     L.marker(CENTER, { icon: userIcon }).addTo(map);
   };
 
-  const addMissionMarkers = (map: L.Map, missions: typeof mainMissions | typeof branchMissions, isMain: boolean = false) =>  {
+  const addMissionMarkers = (map: L.Map, missions: any[], isMain: boolean = false) =>  {
     missions.forEach((m) => {
       const marker = L.marker(m.pos, { icon: createMarkerIcon(m.done, isMain) }).addTo(map);
       const popupContent = document.createElement('div');
       popupContent.className = 'p-4 bg-white font-mono flex flex-col items-center';
       const iconHtml = m.done 
-        ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">${getIconSvg(m.id)}</div>`
+        ? `<div class="w-36 h-36 mb-2 flex items-center justify-center bg-[#4dff88] border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000] overflow-hidden">${m.img || getIconSvg(m.id)}</div>`
         : `<div class="w-12 h-12 mb-2 flex items-center justify-center bg-zinc-100 border-2 border-zinc-900 shadow-[2px_2px_0px_0px_#000]">${getIconSvg('unknown')}</div>`;
       popupContent.innerHTML = `
         ${iconHtml}
@@ -141,7 +142,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       addGeoJsonLayer(map);
       addUserMarker(map);
       addMissionMarkers(map, mainMissions, true);
-      addMissionMarkers(map, branchMissions);
+      addMissionMarkers(map, subMissions);
       mapInstanceRef.current = map;
     }
 

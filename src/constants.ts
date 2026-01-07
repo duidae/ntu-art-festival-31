@@ -38,9 +38,11 @@ const subMissions = [{
   coordinates: [25.02142546608335, 121.53331719333822],
   link: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
   link2: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
+  img: '/submission-wulihsuan.jpg',
 }, {
   title: '民族實中重現北市水圳風華計畫',
   coordinates: [25.009941, 121.539239],
+  img: '/submission-minju.jpg',
 }, {
   title: '倪蔣懷 - 《臺北郊外》',
   coordinates: [25.01347054981437, 121.53613110546853],
@@ -56,6 +58,7 @@ const subMissions = [{
 }, {
   title: '水工所神秘尼斯湖',
   coordinates: [25.016486, 121.539349],
+  img: '/submission-ness.jpg',
 }, {
   title: '瑠公綠廊銅魚',
   coordinates: [25.042568, 121.544556],
@@ -66,6 +69,7 @@ const subMissions = [{
 }, {
   title: '傳說中醉月湖的船',
   coordinates: [25.015961719374307, 121.54159971128277],
+  img: '/submission-boat.jpg',
 }, {
   title: '綜合教學館水圳意象',
   coordinates: [25.018242, 121.539151],
@@ -79,9 +83,10 @@ const subMissions = [{
   title: '台一新生特一號大排木棧橋舊照(二樓)',
   coordinates: [25.019129385103625, 121.53363154698376],
   link: 'https://www.instagram.com/p/DQHI0D6gbDe/?img_index=1',
+  img: '/submission-tai1.jpg',
 }];
 
 export const MISSIONS = {
   Main: mainMissions,
-  Branch: subMissions,
+  Sub: subMissions,
 };
