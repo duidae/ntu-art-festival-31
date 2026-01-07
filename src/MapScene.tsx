@@ -58,13 +58,14 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     iconAnchor: [8, 8],
   });
 
+  // TODO: fix bg color issue
   const createMarkerIcon = (isDone: boolean, isMain: boolean = true) => L.divIcon({
     className: 'custom-brutalist-icon',
     html: `
       <div style="
         width: ${isMain ? '32' : '20'}px;
         height: ${isMain ? '32' : '20'}px;
-        background: ${isDone ? '#d4d4d8' : '#4dff88'}; 
+        background: ${isDone ? '#d4d4d8' : '#4dff88'};
         border: 2px solid #18181b; 
         display: flex; 
         align-items: center; 
@@ -78,20 +79,19 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
     iconAnchor: [16, 16],
   });
 
-  const initializeMap = (container: HTMLDivElement): L.Map => {
+  const initMap = (container: HTMLDivElement): L.Map => {
     const map = L.map(container, {
       zoomControl: false,
       attributionControl: true,
       scrollWheelZoom: true,
     }).setView(CENTER, 15);
-    return map;
-  };
 
-  const addTileLayer = (map: L.Map) => {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
+
+    return map;
   };
 
   const addGeoJsonLayer = (map: L.Map) => {
@@ -110,8 +110,10 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       .catch(err => console.error('Failed to load GeoJSON', err));
   };
 
-  const addUserMarker = (map: L.Map) => {
+  const addMarkers = (map: L.Map) => {
     L.marker(CENTER, { icon: userIcon }).addTo(map);
+    addMissionMarkers(map, mainMissions, true);
+    addMissionMarkers(map, subMissions);
   };
 
   const addMissionMarkers = (map: L.Map, missions: any[], isMain: boolean = false) =>  {
@@ -141,12 +143,9 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
 
   useEffect(() => {
     if (mapContainerRef.current && !mapInstanceRef.current) {
-      const map = initializeMap(mapContainerRef.current);
-      addTileLayer(map);
+      const map = initMap(mapContainerRef.current);
       addGeoJsonLayer(map);
-      addUserMarker(map);
-      addMissionMarkers(map, mainMissions, true);
-      addMissionMarkers(map, subMissions);
+      addMarkers(map);
       mapInstanceRef.current = map;
     }
 
