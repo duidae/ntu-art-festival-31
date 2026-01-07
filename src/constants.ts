@@ -13,7 +13,7 @@ export enum SCENES {
 }
 
 export const CENTER = [25.018429, 121.538275]; // NTU center coordinates
-export const CATFISH_3D_MODEL = 'catfish.glb';
+export const CATFISH_3D_MODEL = 'mission-1-catfish.glb';
 export const CATFISH_3D_MODEL_COVER = 'mission-1-catfish.png';
 
 const mainMissions = [{
@@ -39,11 +39,11 @@ const subMissions = [{
   coordinates: [25.02142546608335, 121.53331719333822],
   link: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
   link2: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
-  img: '/submission-wulihsuan.webp',
+  img: '/submission/wulihsuan.webp',
 }, {
   title: '民族實中重現北市水圳風華計畫',
   coordinates: [25.009941, 121.539239],
-  img: '/submission-minju.webp',
+  img: '/submission/minju.webp',
 }, {
   title: '倪蔣懷 - 《臺北郊外》',
   coordinates: [25.01347054981437, 121.53613110546853],
@@ -59,7 +59,7 @@ const subMissions = [{
 }, {
   title: '水工所神秘尼斯湖',
   coordinates: [25.016486, 121.539349],
-  img: '/submission-ness.webp',
+  img: '/submission/ness.webp',
 }, {
   title: '瑠公綠廊銅魚',
   coordinates: [25.042568, 121.544556],
@@ -70,7 +70,7 @@ const subMissions = [{
 }, {
   title: '傳說中醉月湖的船',
   coordinates: [25.015961719374307, 121.54159971128277],
-  img: '/submission-boat.webp',
+  img: '/submission/boat.webp',
 }, {
   title: '綜合教學館水圳意象',
   coordinates: [25.018242, 121.539151],
@@ -84,7 +84,7 @@ const subMissions = [{
   title: '台一新生特一號大排木棧橋舊照(二樓)',
   coordinates: [25.019129385103625, 121.53363154698376],
   link: 'https://www.instagram.com/p/DQHI0D6gbDe/?img_index=1',
-  img: '/submission-tai1.webp',
+  img: '/submission/tai1.webp',
 }];
 
 export const MISSIONS = {
