@@ -52,8 +52,6 @@ export default function App() {
           {scene === SCENES.MISSION_2 && <Mission2 setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.MISSION_3 && <Mission3 setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.BRANCH_1 && <BranchScene setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.BRANCH_2 && <BranchScene setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.BRANCH_3 && <BranchScene setScene={setScene} setProgress={setProgress} />}
           {scene === SCENES.FINALE && <FinalScene />}
         </div>
 
