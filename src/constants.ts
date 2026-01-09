@@ -33,12 +33,12 @@ const mainMissions = [{
 
 const subMissions = [{
   title: '新生特一號大排起點',
-  coordinates: [25.016538412134473, 121.53344031408966],
+  coordinates: [25.016984, 121.533561],
 }, {
   title: '霧裡薛圳第二支線遺址',
   coordinates: [25.02142546608335, 121.53331719333822],
-  link: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
-  link2: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
+  gmap: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
+  link: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
   img: '/submission/wulihsuan.webp',
 }, {
   title: '民族實中重現北市水圳風華計畫',
@@ -51,11 +51,12 @@ const subMissions = [{
 }, {
   title: '瑠公圳原址紀念碑',
   coordinates: [25.017749911515796, 121.53358571541791],
-  link: 'https://maps.app.goo.gl/Ph8fcuHWHXMpGrZD9',
+  gmap: 'https://maps.app.goo.gl/Ph8fcuHWHXMpGrZD9',
 }, {
   title: '瑠公圳水源池',
   coordinates: [25.016141649719067, 121.53976500223325],
-  link: 'https://maps.app.goo.gl/tf4FkGwVxXDzvyK37',
+  gmap: 'https://maps.app.goo.gl/tf4FkGwVxXDzvyK37',
+  story: '/story/liu-gong-jun-pool.json',
 }, {
   title: '水工所神秘尼斯湖',
   coordinates: [25.016486, 121.539349],
@@ -78,13 +79,20 @@ const subMissions = [{
   title: '志鴻館水圳意象(草溝)',
   coordinates: [25.018947, 121.539132],
 }, {
-  title: '新生南路水圳意象重現(堀川)',
-  coordinates: [25.020390, 121.5343171],
+  title: '新生南路特一號幹線(堀川)水渠意象重現',
+  coordinates: [25.02039, 121.5343171],
+  story: '/story/xinsheng-south-road.json',
 }, {
   title: '台一新生特一號大排木棧橋舊照(二樓)',
   coordinates: [25.019129385103625, 121.53363154698376],
   link: 'https://www.instagram.com/p/DQHI0D6gbDe/?img_index=1',
   img: '/submission/tai1.webp',
+}, {
+  title: '台ㄎ烏龜池',
+  coordinates: [25.01414042398511, 121.54180956739434],
+  gmap: 'https://maps.app.goo.gl/HpWzrrmb17ddQ84F8',
+  img: '/submission/tai1.webp', // TODO: change photo
+  story: '/story/NTUST-turtle-pool.json',
 }];
 
 export const MISSIONS = {
