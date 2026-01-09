@@ -49,7 +49,25 @@ export const BranchScene = ({ setScene, setProgress }: MissionProps) => {
     });
   };
 
-  if (!story) return <div>Loading...</div>;
+  if (!story) return (
+    <div className="h-full bg-[#f4f4f5] flex flex-col items-center justify-center relative p-6">
+      <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+        <h1 className="text-9xl font-black">HIST</h1>
+      </div>
+      <div className="text-center space-y-6">
+        <div className="inline-block">
+          <div className="relative w-16 h-16 mx-auto">
+            <div className="absolute inset-0 border-2 border-zinc-300 rounded-none animate-pulse"></div>
+            <div className="absolute inset-2 border-2 border-[#4dff88] animate-spin-slow"></div>
+          </div>
+        </div>
+        <div className="font-mono text-xs text-zinc-500 space-y-2">
+          <p>正在讀取檔案...</p>
+          <p className="text-[#4dff88] font-bold animate-pulse-slow">資料載入中</p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="h-full bg-[#f4f4f5] relative flex flex-col p-6">
