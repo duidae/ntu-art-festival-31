@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Map as MapIcon,
-  X,
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from './components/Button';
 import { SCENES } from './constants';
 
