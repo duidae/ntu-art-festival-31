@@ -22,7 +22,6 @@ export const BranchScene = ({ setScene, setProgress }: MissionProps) => {
       try {
         const response = await fetch('/story/NTUST-turtle-pool.json');
         const story = await response.json();
-        console.log('Loaded story:', story);
         setStory(story);
       } catch (err) {
         console.error(err);
@@ -30,6 +29,28 @@ export const BranchScene = ({ setScene, setProgress }: MissionProps) => {
     };
     loadStory();
   }, []);
+
+  const renderStory = (story: any) => {
+    if (!story || !story.contents) return null;
+    
+    return story.contents.map((item: any, index: number) => {
+      switch (item.type) {
+        case 'paragraph':
+          return <p key={index} className="mb-4 text-zinc-900">{item.text}</p>;
+        case 'image':
+          return <img key={index} src={item.url} alt="" className="mb-4 w-full h-auto" />;
+        case 'video':
+          return (
+            <video key={index} controls className="mb-4 w-full h-auto">
+              <source src={item.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          );
+        default:
+          return null;
+      }
+    });
+  };
 
   if (!story) return <div>Loading...</div>;
 
@@ -47,6 +68,7 @@ export const BranchScene = ({ setScene, setProgress }: MissionProps) => {
       </div>
 
       <div className="flex-1">
+        {renderStory(story)}
       </div>
 
       <div className="flex-1 z-10 flex flex-col items-center justify-center relative">
