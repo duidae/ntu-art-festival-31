@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from './components/Button';
-import { SCENES } from './constants';
 
 interface BranchSceneProps {
   storyPath: string;
@@ -48,7 +47,7 @@ export const BranchScene = (props: BranchSceneProps) => {
   };
 
   const loadingJSX = (
-    <div className="bg-[#f4f4f5] flex flex-col items-center justify-center relative p-6">
+    <div className="h-1/2 bg-[#f4f4f5] flex flex-col items-center justify-center relative p-6">
       <div className="text-center space-y-6">
         <div className="inline-block">
           <div className="relative w-16 h-16 mx-auto">
@@ -56,7 +55,7 @@ export const BranchScene = (props: BranchSceneProps) => {
             <div className="absolute inset-2 border-2 border-[#4dff88] animate-spin-slow"></div>
           </div>
         </div>
-        <div className="font-mono text-xs text-zinc-500 space-y-2">
+        <div className="font-mono text-lg text-zinc-500 space-y-2">
           <p>正在讀取檔案...</p>
           <p className="text-[#4dff88] font-bold animate-pulse-slow">資料載入中</p>
         </div>
