@@ -3,14 +3,14 @@ import {
   ArrowRight, 
   Map as MapIcon,
 } from 'lucide-react';
-import { Button } from './components/Button';
-import { APP_NAME } from './constants';
+import { Button } from '@/src/components/Button';
+import { APP_NAME } from '@/src/constants';
 
 interface IntroSceneProps {
   onChangeScene: () => void;
 }
 
-export const IntroScene = ({ onChangeScene }: IntroSceneProps) => {
+export const Intro = ({ onChangeScene }: IntroSceneProps) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -64,4 +64,4 @@ export const IntroScene = ({ onChangeScene }: IntroSceneProps) => {
   );
 };
 
-export default IntroScene;
+export default Intro;

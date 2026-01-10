@@ -6,9 +6,9 @@ import {
   Mic, 
   Share2,
 } from 'lucide-react';
-import { Button } from './components/Button';
+import { Button } from '@/src/components/Button';
 
-export const FinalScene = () => {
+export const Final = () => {
   const [pledged, setPledged] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -111,4 +111,4 @@ export const FinalScene = () => {
   );
 };
 
-export default FinalScene;
+export default Final;

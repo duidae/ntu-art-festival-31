@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Button } from './components/Button';
+import { Button } from '@/src/components/Button';
 
-interface BranchSceneProps {
+interface SubMissionProps {
   storyPath: string;
   onChangeScene: () => void;
 }
 
-export const BranchScene = (props: BranchSceneProps) => {
+export const SubMission = (props: SubMissionProps) => {
   const { storyPath, onChangeScene } = props;
   const [story, setStory] = useState<any>(null);
 
@@ -94,4 +94,4 @@ export const BranchScene = (props: BranchSceneProps) => {
   );
 };
 
-export default BranchScene;
+export default SubMission;

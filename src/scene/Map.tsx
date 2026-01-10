@@ -1,14 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { Waves } from 'lucide-react';
-import { Button } from './components/Button';
-import { SCENES, CENTER, MISSIONS } from './constants'
+import { Button } from '../components/Button';
+import { SCENES, CENTER, MISSIONS } from '../constants'
 
-interface SceneProps {
+interface MapProps {
   setScene: (targetScene: {scene: SCENES, story: string}) => void;
-}
-
-interface MapSceneProps extends SceneProps {
   progress: { m1: boolean; m2: boolean; m3: boolean, b1: boolean; b2: boolean; b3: boolean};
 }
 
@@ -16,7 +13,7 @@ interface MapSceneProps extends SceneProps {
 // 1. 增加 水道map layer
 // 2. 本計劃/藝術季作品分隔顯示
 
-export const MapScene = ({ setScene, progress }: MapSceneProps) => {
+export const Map = ({ setScene, progress }: MapProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const allDone = progress.m1 && progress.m2 && progress.m3;
@@ -186,4 +183,4 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
   );
 };
 
-export default MapScene;
+export default Map;

@@ -6,13 +6,17 @@ import {
   Map as MapIcon,
 } from 'lucide-react';
 import { SCENES, APP_NAME } from './constants';
-import { IntroScene } from './IntroScene';
-import { MapScene } from './MapScene';
+import { Intro, Map, SubMission, Final } from './scene';
+/*
+import { Intro } from './scene/Intro';
+import { Map } from './scene/Map';
+
+import { SubMission } from './scene/SubMission';
+import { Final } from './scene/Final';
+*/
 import { Mission1 } from './Mission1Scene';
 import { Mission2 } from './Mission2Scene';
 import { Mission3 } from './Mission3Scene';
-import { BranchScene } from './BranchScene';
-import { FinalScene } from './FinalScene';
 
 /**
  * 圳下之聲：瑠公圳的隱地下生態 (Voices from the Underground)
@@ -50,13 +54,13 @@ export default function App() {
         </div>
 
         <div className="flex-1 relative overflow-hidden">
-          {currentScene.scene === SCENES.INTRO && <IntroScene onChangeScene={backToMap} />}
-          {currentScene.scene === SCENES.MAP && <MapScene setScene={setCurrentScene} progress={progress} />}
+          {currentScene.scene === SCENES.INTRO && <Intro onChangeScene={backToMap} />}
+          {currentScene.scene === SCENES.MAP && <Map setScene={setCurrentScene} progress={progress} />}
           {currentScene.scene === SCENES.MISSION_1 && <Mission1 setScene={setCurrentScene} setProgress={setProgress} />}
           {currentScene.scene === SCENES.MISSION_2 && <Mission2 setScene={setCurrentScene} setProgress={setProgress} />}
           {currentScene.scene === SCENES.MISSION_3 && <Mission3 setScene={setCurrentScene} setProgress={setProgress} />}
-          {currentScene.scene === SCENES.BRANCH_1 && <BranchScene storyPath={currentScene.story} onChangeScene={backToMap} />}
-          {currentScene.scene === SCENES.FINALE && <FinalScene />}
+          {currentScene.scene === SCENES.BRANCH_1 && <SubMission storyPath={currentScene.story} onChangeScene={backToMap} />}
+          {currentScene.scene === SCENES.FINALE && <Final />}
         </div>
 
         {currentScene.scene === SCENES.MAP && (
