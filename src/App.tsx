@@ -29,8 +29,12 @@ const NoiseOverlay = () => (
 );
 
 export default function App() {
-  const [scene, setScene] = useState<SCENES>(SCENES.INTRO);
+  const [currentScene, setCurrentScene] = useState<{scene: SCENES, story: string}>({scene: SCENES.INTRO, story: ""});
   const [progress, setProgress] = useState({ m1: false, m2: false, m3: false, b1: false, b2: false, b3: false });
+
+  const backToMap = () => {
+    setCurrentScene({scene: SCENES.MAP, story: ""});
+  };
 
   return (
     <div className="min-h-screen bg-[#dcdcdc] flex items-center justify-center p-0 md:p-8 font-sans text-zinc-900">
@@ -46,18 +50,18 @@ export default function App() {
         </div>
 
         <div className="flex-1 relative overflow-hidden">
-          {scene === SCENES.INTRO && <IntroScene setScene={setScene} />}
-          {scene === SCENES.MAP && <MapScene setScene={setScene} progress={progress} />}
-          {scene === SCENES.MISSION_1 && <Mission1 setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.MISSION_2 && <Mission2 setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.MISSION_3 && <Mission3 setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.BRANCH_1 && <BranchScene setScene={setScene} setProgress={setProgress} />}
-          {scene === SCENES.FINALE && <FinalScene />}
+          {currentScene.scene === SCENES.INTRO && <IntroScene onChangeScene={backToMap} />}
+          {currentScene.scene === SCENES.MAP && <MapScene setScene={setCurrentScene} progress={progress} />}
+          {currentScene.scene === SCENES.MISSION_1 && <Mission1 setScene={setCurrentScene} setProgress={setProgress} />}
+          {currentScene.scene === SCENES.MISSION_2 && <Mission2 setScene={setCurrentScene} setProgress={setProgress} />}
+          {currentScene.scene === SCENES.MISSION_3 && <Mission3 setScene={setCurrentScene} setProgress={setProgress} />}
+          {currentScene.scene === SCENES.BRANCH_1 && <BranchScene storyPath={currentScene.story} onChangeScene={backToMap} />}
+          {currentScene.scene === SCENES.FINALE && <FinalScene />}
         </div>
 
-        {scene === SCENES.MAP && (
+        {currentScene.scene === SCENES.MAP && (
           <div className="absolute bottom-8 left-4 right-4 h-16 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center justify-around px-2 z-[1000]">
-            <button className="flex flex-col items-center gap-1 text-zinc-900 group" onClick={() => setScene(SCENES.MAP)}>
+            <button className="flex flex-col items-center gap-1 text-zinc-900 group" onClick={() => setCurrentScene({scene: SCENES.MAP, story: ""})}>
               <div className="bg-[#4dff88] p-1 border border-zinc-900 transition-transform group-hover:-translate-y-1">
                 <MapPin size={18} />
               </div>

@@ -5,7 +5,7 @@ import { Button } from './components/Button';
 import { SCENES, CENTER, MISSIONS } from './constants'
 
 interface SceneProps {
-  setScene: (scene: SCENES) => void;
+  setScene: (targetScene: {scene: SCENES, story: string}) => void;
 }
 
 interface MapSceneProps extends SceneProps {
@@ -47,6 +47,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       pos: m.coordinates as L.LatLngExpression,
       title: m.title,
       img: `<img src="${m.img || ''}" loading="lazy" style="width: 100%; height: auto; display: block;" />`,
+      story: m.story || "",
       done: true,
     };
   });
@@ -133,7 +134,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
       if (btn) {
         btn.onclick = (e) => {
           e.preventDefault();
-          setScene(m.id);
+          setScene({scene: m.id, story: m.story || ""});
         };
       }
       marker.on('click', () => map.panTo(marker.getLatLng()));
@@ -176,7 +177,7 @@ export const MapScene = ({ setScene, progress }: MapSceneProps) => {
           </div>
           <h2 className="text-3xl font-black mb-2 text-zinc-900 uppercase">系統同步完成</h2>
           <p className="text-zinc-500 font-mono text-xs mb-8">ALL NODES CONNECTED.</p>
-          <Button variant="secondary" onClick={() => setScene(SCENES.FINALE)} className="w-full">
+          <Button variant="secondary" onClick={() => setScene({scene: SCENES.FINALE, story: ""})} className="w-full">
             進入地下終章
           </Button>
         </div>

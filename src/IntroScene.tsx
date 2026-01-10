@@ -4,13 +4,13 @@ import {
   Map as MapIcon,
 } from 'lucide-react';
 import { Button } from './components/Button';
-import { SCENES, APP_NAME } from './constants';
+import { APP_NAME } from './constants';
 
-interface SceneProps {
-  setScene: (scene: SCENES) => void;
+interface IntroSceneProps {
+  onChangeScene: () => void;
 }
 
-export const IntroScene = ({ setScene }: SceneProps) => {
+export const IntroScene = ({ onChangeScene }: IntroSceneProps) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -53,8 +53,8 @@ export const IntroScene = ({ setScene }: SceneProps) => {
                 「若你願意傾聽，沿著地面裂縫去找我們。」
               </p>
             </div>
-            
-            <Button onClick={() => setScene(SCENES.MAP)} className="w-full" variant="primary">
+
+            <Button onClick={() => onChangeScene()} className="w-full" variant="primary">
               開始聆聽 <ArrowRight size={16} />
             </Button>
           </div>
