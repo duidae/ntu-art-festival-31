@@ -9,8 +9,6 @@ import { SCENES } from '@/src/enum';
 import { APP_NAME } from '@/src/constants';
 import { Intro, Map, MainMission, SubMission, Final } from '@/src/scene';
 import { Mission1 } from './Mission1Scene';
-import { Mission2 } from './Mission2Scene';
-import { Mission3 } from './Mission3Scene';
 
 /**
  * 圳下之聲：瑠公圳的隱地下生態 (Voices from the Underground)
@@ -80,9 +78,7 @@ export default function App() {
             </>
           }
           {currentScene.scene === SCENES.MISSION_1 && <Mission1 setScene={setCurrentScene} setProgress={setProgress} />}
-          {currentScene.scene === SCENES.MISSION_2 && <Mission2 setScene={setCurrentScene} setProgress={setProgress} />}
-          {currentScene.scene === SCENES.MISSION_3 && <Mission3 setScene={setCurrentScene} setProgress={setProgress} />}
-          {currentScene.scene === SCENES.BRANCH_1 && <SubMission storyPath={currentScene.story} onChangeScene={backToMap} />}
+          {currentScene.scene === SCENES.SUB_MISSION && <SubMission storyPath={currentScene.story} onChangeScene={backToMap} />}
           {currentScene.scene === SCENES.FINALE && <Final onChangeScene={backToMap} />}
         </div>
       </div>

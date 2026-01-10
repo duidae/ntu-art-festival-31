@@ -27,12 +27,12 @@ export const Map = ({ setScene, progress }: MapProps) => {
       img: `<img src="${MISSIONS.Main[0].img || ''}" loading="lazy" style="width: 100%; height: auto; display: block;" />`,
       done: progress.m1
     }, {
-      id: SCENES.MISSION_2,
+      id: SCENES.MAIN_MISSION,
       pos: MISSIONS.Main[1].coordinates as L.LatLngExpression,
       title: MISSIONS.Main[1].title,
       done: progress.m2
     }, {
-      id: SCENES.MISSION_3,
+      id: SCENES.MAIN_MISSION,
       pos: MISSIONS.Main[2].coordinates as L.LatLngExpression,
       title: MISSIONS.Main[2].title,
       done: progress.m3
@@ -41,7 +41,7 @@ export const Map = ({ setScene, progress }: MapProps) => {
 
   const subMissions = MISSIONS.Sub.map(m => {
     return {
-      id: SCENES.BRANCH_1,
+      id: SCENES.SUB_MISSION,
       pos: m.coordinates as L.LatLngExpression,
       title: m.title,
       img: `<img src="${m.img || ''}" loading="lazy" style="width: 100%; height: auto; display: block;" />`,
