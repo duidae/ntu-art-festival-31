@@ -7,7 +7,8 @@ import {
 import { Button } from './components/Button';
 import { DialogBox } from './components/DialogBox';
 import { ModelViewer } from './components/ModelViewer';
-import { SCENES, CATFISH_3D_MODEL, CATFISH_3D_MODEL_COVER } from './constants'
+import { SCENES } from '@/src/enum';
+import { CATFISH_3D_MODEL, CATFISH_3D_MODEL_COVER } from '@/src/constants'
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;

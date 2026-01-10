@@ -1,17 +1,5 @@
 export const APP_NAME = 'NTU 31<sup>st</sup> ART FESTIVAL';
 
-export enum SCENES {
-  INTRO = 'INTRO',
-  MAP = 'MAP',
-  MISSION_1 = 'MISSION_1',
-  MISSION_2 = 'MISSION_2',
-  MISSION_3 = 'MISSION_3',
-  BRANCH_1 = 'BRANCH_1',
-  BRANCH_2 = 'BRANCH_2',
-  BRANCH_3 = 'BRANCH_3',
-  FINALE = 'FINALE'
-}
-
 export const CENTER = [25.018429, 121.538275]; // NTU center coordinates
 export const CATFISH_3D_MODEL = 'mission-1-catfish.glb';
 export const CATFISH_3D_MODEL_COVER = 'mission-1-catfish.png';

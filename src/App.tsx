@@ -5,15 +5,9 @@ import {
   Waves,
   Map as MapIcon,
 } from 'lucide-react';
-import { SCENES, APP_NAME } from './constants';
-import { Intro, Map, SubMission, Final } from './scene';
-/*
-import { Intro } from './scene/Intro';
-import { Map } from './scene/Map';
-
-import { SubMission } from './scene/SubMission';
-import { Final } from './scene/Final';
-*/
+import { SCENES } from '@/src/enum';
+import { APP_NAME } from '@/src/constants';
+import { Intro, Map, SubMission, Final } from '@/src/scene';
 import { Mission1 } from './Mission1Scene';
 import { Mission2 } from './Mission2Scene';
 import { Mission3 } from './Mission3Scene';
@@ -40,6 +34,30 @@ export default function App() {
     setCurrentScene({scene: SCENES.MAP, story: ""});
   };
 
+  const mapToolbarJSX = (
+    <div className="absolute bottom-8 left-4 right-4 h-16 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center justify-around px-2 z-[1000]">
+      <button className="flex flex-col items-center gap-1 text-zinc-900 group" onClick={() => setCurrentScene({scene: SCENES.MAP, story: ""})}>
+        <div className="bg-[#4dff88] p-1 border border-zinc-900 transition-transform group-hover:-translate-y-1">
+          <MapPin size={18} />
+        </div>
+        <span className="text-[10px] font-bold tracking-tighter">地圖</span>
+      </button>
+      <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-zinc-900 group">
+        <div className="p-1 border border-transparent group-hover:border-zinc-900 transition-colors">
+           <Waves size={18} />
+        </div>
+        <span className="text-[10px] font-bold tracking-tighter">聲音</span>
+      </button>
+      <button className="flex flex-col items-center gap-1 text-zinc-900 group relative">
+        <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#4dff88] rounded-full border border-black z-10"></div>
+        <div className="p-1 border border-zinc-900 bg-zinc-900 text-white transition-transform group-hover:scale-110">
+           <Scan size={18} />
+        </div>
+        <span className="text-[10px] font-bold tracking-tighter">掃描</span>
+      </button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#dcdcdc] flex items-center justify-center p-0 md:p-8 font-sans text-zinc-900">
       <div className="w-full max-w-md h-[100dvh] md:h-[800px] bg-[#e8e8e6] md:border-4 border-zinc-900 shadow-2xl overflow-hidden relative flex flex-col">
@@ -55,37 +73,18 @@ export default function App() {
 
         <div className="flex-1 relative overflow-hidden">
           {currentScene.scene === SCENES.INTRO && <Intro onChangeScene={backToMap} />}
-          {currentScene.scene === SCENES.MAP && <Map setScene={setCurrentScene} progress={progress} />}
+          {currentScene.scene === SCENES.MAP &&
+            <>
+              <Map setScene={setCurrentScene} progress={progress} />
+              {mapToolbarJSX}
+            </>
+          }
           {currentScene.scene === SCENES.MISSION_1 && <Mission1 setScene={setCurrentScene} setProgress={setProgress} />}
           {currentScene.scene === SCENES.MISSION_2 && <Mission2 setScene={setCurrentScene} setProgress={setProgress} />}
           {currentScene.scene === SCENES.MISSION_3 && <Mission3 setScene={setCurrentScene} setProgress={setProgress} />}
           {currentScene.scene === SCENES.BRANCH_1 && <SubMission storyPath={currentScene.story} onChangeScene={backToMap} />}
           {currentScene.scene === SCENES.FINALE && <Final />}
         </div>
-
-        {currentScene.scene === SCENES.MAP && (
-          <div className="absolute bottom-8 left-4 right-4 h-16 bg-white border-2 border-zinc-900 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center justify-around px-2 z-[1000]">
-            <button className="flex flex-col items-center gap-1 text-zinc-900 group" onClick={() => setCurrentScene({scene: SCENES.MAP, story: ""})}>
-              <div className="bg-[#4dff88] p-1 border border-zinc-900 transition-transform group-hover:-translate-y-1">
-                <MapPin size={18} />
-              </div>
-              <span className="text-[10px] font-bold tracking-tighter">地圖</span>
-            </button>
-            <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-zinc-900 group">
-              <div className="p-1 border border-transparent group-hover:border-zinc-900 transition-colors">
-                 <Waves size={18} />
-              </div>
-              <span className="text-[10px] font-bold tracking-tighter">聲音</span>
-            </button>
-            <button className="flex flex-col items-center gap-1 text-zinc-900 group relative">
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#4dff88] rounded-full border border-black z-10"></div>
-              <div className="p-1 border border-zinc-900 bg-zinc-900 text-white transition-transform group-hover:scale-110">
-                 <Scan size={18} />
-              </div>
-              <span className="text-[10px] font-bold tracking-tighter">掃描</span>
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

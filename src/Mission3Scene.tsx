@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { Button } from './components/Button';
 import { DialogBox } from './components/DialogBox';
-import { SCENES } from './constants';
+import { SCENES } from '@/src/enum';
 
 interface SceneProps {
   setScene: (scene: SCENES) => void;

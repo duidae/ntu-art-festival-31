@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { Waves } from 'lucide-react';
 import { Button } from '../components/Button';
-import { SCENES, CENTER, MISSIONS } from '../constants'
+import { SCENES } from '@/src/enum';
+import { CENTER, MISSIONS } from '@/src/constants';
 
 interface MapProps {
   setScene: (targetScene: {scene: SCENES, story: string}) => void;
