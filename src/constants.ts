@@ -23,31 +23,31 @@ const subMissions = [{
   title: '新生特一號大排起點',
   coordinates: [25.016984, 121.533561],
   img: '/submission/tai1.webp', // TODO: change photo
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/xinsheng-1st-drain-start.json',
 }, {
   title: '霧裡薛圳第二支線遺址',
   coordinates: [25.02142546608335, 121.53331719333822],
   gmap: 'https://maps.app.goo.gl/YFi6DGBU56eGVhCJ9',
   link: 'https://nchdb.boch.gov.tw/assets/advanceSearch/monument/20250716000002',
   img: '/submission/wulihsuan.webp',
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/wulihsuan-2nd-branch-heritage.json',
 }, {
   title: '民族實中重現北市水圳風華計畫',
   coordinates: [25.009941, 121.539239],
   img: '/submission/minju.webp',
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/minju-junior-high-revitalization.json',
 }, {
   title: '倪蔣懷 - 《臺北郊外》',
   coordinates: [25.01347054981437, 121.53613110546853],
   link: 'https://www.gch.tw/works/73',
   img: '/submission/tai1.webp', // TODO: change photo
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/Ni-Jhiang-Huai-Taipei-suburbs.json',
 }, {
   title: '瑠公圳原址紀念碑',
   coordinates: [25.017749911515796, 121.53358571541791],
   gmap: 'https://maps.app.goo.gl/Ph8fcuHWHXMpGrZD9',
   img: '/submission/tai1.webp', // TODO: change photo
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/liu-gong-jun-monument.json',
 }, {
   title: '瑠公圳水源池',
   coordinates: [25.016141649719067, 121.53976500223325],
@@ -58,12 +58,12 @@ const subMissions = [{
   title: '水工所神秘尼斯湖',
   coordinates: [25.016486, 121.539349],
   img: '/submission/ness.webp',
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/mystery-ness.json',
 }, {
   title: '瑠公綠廊銅魚',
   coordinates: [25.042568, 121.544556],
   img: '/submission/tai1.webp', // TODO: change photo
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/liu-gong-green-aisle-fish.json',
 }, {
   title: '師範大學誠溪',
   coordinates: [25.02743010513216, 121.52942428094387],
@@ -74,7 +74,7 @@ const subMissions = [{
   title: '傳說中醉月湖的船',
   coordinates: [25.015961719374307, 121.54159971128277],
   img: '/submission/boat.webp',
-  story: '/story/NTUST-turtle-pool.json',
+  story: '/story/legendary-boat-ever-in-moon-lake.json',
 }, {
   title: '綜合教學館水圳意象',
   coordinates: [25.018242, 121.539151],
